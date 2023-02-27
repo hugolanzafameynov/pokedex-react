@@ -1,0 +1,116 @@
+.App {
+  font-family: sans-serif;
+  background-color: darkslategray;
+}
+
+#Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 10px;
+}
+
+#Logo {
+  height: 40px;
+}
+
+.LanguageOption {
+  padding-right: 10px;
+}
+
+#PokemonList {
+  clear: both;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.PokemonCard {
+  margin: 10px;
+  height: 175px;
+  width: 175px;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: black;
+  background-color: white;
+}
+
+.PokemonId {
+  font-size:small;
+  float: left;
+}
+
+.PokemonObjectZone {
+  display: flex;
+  justify-content: center;
+}
+
+.PokemonName {
+  font-size: large;
+}
+
+.PokemonType {
+  width: 60px;
+  text-align: center;
+  font-size: medium;
+  border-radius: 5px;
+  border-style: ridge;
+  border-color: black;
+  padding: 2px;
+  margin: 2px;
+}
+
+.Grass {
+  background-color: #7AC74C;
+}
+.Fire {
+  background-color: #EE8130;
+}
+.Water {
+  background-color: #6390F0;
+}
+.Poison{
+  background-color: #A33EA1;
+}
+.Flying {
+  background-color: #A98FF3;
+}
+.Normal{
+  background-color: #A8A77A;
+}
+.Electric{
+  background-color: #F7D02C;
+}
+.Ground{
+  background-color: #E2BF65;
+}
+.Fairy{
+  background-color: #D685AD;
+}
+.Bug {
+  background-color: #A6B91A;
+}
+.Fighting {
+  background-color: #C22E28;
+}
+.Psychic {
+  background-color: #F95587;
+}
+.Steel {
+  background-color: #B7B7CE;
+}
+.Ice {
+  background-color: #96D9D6;
+}
+.Rock {
+  background-color: #B6A136;
+}
+.Dragon {
+  background-color: #6F35FC;
+}
+.Ghost {
+  background-color: #735797;
+}
+.Dark {
+  background-color: #705746;
+}
