@@ -1,157 +1,79 @@
-import "./styles.css";
-import logo from "./logo.svg";
-import json from "./pokemons.json"
+import React, { useEffect, useState } from 'react'
+import {
+  createBrowserRouter,
+  createRoutesFromElements, Outlet,
+  Route,
+  RouterProvider,
+} from 'react-router-dom'
+import { Box } from '@mui/material'
+import Header from './components/Header'
+import PokemonDetailsPage from './components/PokemonDetailsPage'
+import PokemonListPage from './components/PokemonListPage'
+import languageContext from './contexts/languageContext'
+import pokemonListContext from './contexts/pokemonListContext'
+import pokemonTypesContext from './contexts/pokemonTypesContext'
 
-const Logo = () => {
-  return <img id="Logo" src={logo} alt="The logo of PokedexID"/>
-}
-
-const Header = ({title}) => {
+const CustomScreen = () => {
   return (
-    <div id="Header">
-      <Logo/>
-      <LanguageSelection/>
-    </div>
+    <Box>
+        <Header />
+        <Outlet />
+    </Box>
   )
 }
 
-const LanguageSelection = () => {
-  return (
-    <select id="LanguageSelection">
-      <option className="LanguageOption" value="fr">Francais</option>
-      <option className="LanguageOption" value="en">Anglais</option>
-    </select>
-  )
-}
+function App() {
+  const [typeList, setTypeList] = useState([])
+  const [pokemonList, setPokemonList] = useState([])
+  const [language, setLanguage] = useState('fr')
+  const [languageList, setLanguageList] = useState([])
 
-const PokemonList = () => {
-  const list =[];
-  const pokemonNumber = Object.keys(json).length;
-    for(let i=0; i<pokemonNumber; i++){
-      list.push(<PokemonCard id={json[i]["id"]} name={json[i]["names"]["en"]} img={json[i]["image"]} types={json[i]["types"]}/>)
+  const changeLanguage = (newLanguage) => {
+    setLanguage(newLanguage)
+  }
+
+  useEffect(() => {
+    const getTypeList = async () => {
+      const response = await fetch('https://pokedex-jgabriele.vercel.app/types.json')
+      const data = await response.json()
+      const languagesKey = Object.keys(data[Object.keys(data)[0]].translations)
+
+      setTypeList(data)
+      setLanguageList(languagesKey.sort())
     }
 
-    return ( 
-      <div id="PokemonList">
-        {list}
-      </div>
-    )
-}
+    const getPokemonList = async () => {
+      const response = await fetch('https://pokedex-jgabriele.vercel.app/pokemons.json')
+      const data = await response.json()
 
-const PokemonCard = ({id, name, img, types}) => {
-  let pokeId = PokeId({id});
-  let pokeName = PokeName({name});
-  let pokeImg = PokeImg({img, name});
-  let pokeTypes = PokeTypes({types});
-
-  return (
-    <div id={id} className="PokemonCard">
-      {pokeId} <br />
-      {pokeName}
-      {pokeImg}
-      {pokeTypes}
-    </div>  
-  )
-};
-
-const PokeId = ({id}) => {
-  return (
-    <div className="PokemonId">No.{id}</div>
-  )
-}
-
-const PokeName = ({name}) => {
-  return (
-    <div className="PokemonObjectZone">
-      <div className="PokemonName">{name}</div>
-    </div>
-  )
-}
-
-const PokeImg = ({img, name}) => {
-  return (
-    <div className="PokemonObjectZone">
-      <img className="PokemonImg" src={img} alt={name}/>
-    </div>
-  )
-}
-
-const PokeTypes = ({types}) => {
-  let typesCase = [];
-  types.forEach(type => {
-    switch(type) {
-      case "grass":
-        typesCase.push(<div className="PokemonType Grass">{type}</div>);
-        break;
-      case "fire":
-        typesCase.push(<div className="PokemonType Fire">{type}</div>);
-        break;
-      case "water":
-        typesCase.push(<div className="PokemonType Water">{type}</div>);
-        break;
-      case "poison":
-        typesCase.push(<div className="PokemonType Poison">{type}</div>);
-        break;
-      case "flying":
-        typesCase.push(<div className="PokemonType Flying">{type}</div>);
-        break;
-      case "normal":
-        typesCase.push(<div className="PokemonType Normal">{type}</div>);
-        break;
-      case "electric":
-        typesCase.push(<div className="PokemonType Electric">{type}</div>);
-        break;
-      case "ground":
-        typesCase.push(<div className="PokemonType Ground">{type}</div>);
-        break;
-      case "fairy":
-        typesCase.push(<div className="PokemonType Fairy">{type}</div>);
-        break;
-      case "bug":
-        typesCase.push(<div className="PokemonType Bug">{type}</div>);
-        break;
-      case "fighting":
-        typesCase.push(<div className="PokemonType Fighting">{type}</div>);
-        break;
-      case "psychic":
-        typesCase.push(<div className="PokemonType Psychic">{type}</div>);
-        break;
-      case "steel":
-        typesCase.push(<div className="PokemonType Steel">{type}</div>);
-        break;
-      case "ice":
-        typesCase.push(<div className="PokemonType Ice">{type}</div>);
-        break;
-      case "rock":
-        typesCase.push(<div className="PokemonType Rock">{type}</div>);
-        break;
-      case "dragon":
-        typesCase.push(<div className="PokemonType Dragon">{type}</div>);
-        break;
-      case "ghost":
-        typesCase.push(<div className="PokemonType Ghost">{type}</div>);
-        break;
-       case "dark":
-        typesCase.push(<div className="PokemonType Dark">{type}</div>);
-        break;
-      default:
-        typesCase.push(<div className="PokemonType">{type}</div>);
-        break;
+      setPokemonList(data)
     }
-  });
 
-  return (
-    <div className="PokemonObjectZone">
-      {typesCase}
-    </div>
+    getTypeList()
+    getPokemonList()
+  }, [])
+
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        <Route path='/' element={<CustomScreen />}>
+          <Route path='/' element={<PokemonListPage />}>
+            <Route path='/pokemon/:pokemonId' element={<PokemonDetailsPage />} />
+          </Route>
+        </Route>
+      </>,
+    ),
   )
-};
 
-export default function App() {
   return (
-    <div className="App">
-      <Header/>
-      <PokemonList/>
-    </div>
-  );
+    <pokemonListContext.Provider value={pokemonList}>
+      <pokemonTypesContext.Provider value={typeList}>
+        <languageContext.Provider value={{ language, changeLanguage, languageList }}>
+          <RouterProvider router={router} />
+        </languageContext.Provider>
+      </pokemonTypesContext.Provider>
+    </pokemonListContext.Provider>
+  )
 }
+
+export default App
